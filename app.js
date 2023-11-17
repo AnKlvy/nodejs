@@ -50,30 +50,51 @@ const server = http.createServer((req, res) => {
 
 const path = require('path');
 
-function readDirectoryContents(directoryPath) {
-  fs.readdir(directoryPath, { withFileTypes: true }, (err, files) => {
+function readDirectory(path) {
+  fs.readdir(path, { withFileTypes: true }, (err, files) => {
     if (err) {
       console.error(`Ошибка при чтении директории: ${err.message}`);
-      return;
+    } else {
+      console.log(`Содержимое директории ${path}:`);
+
+      files.forEach((file) => {
+        if (file.isDirectory()) {
+          console.log(`[Поддиректория] ${file.name}`);
+        } else {
+          console.log(`[Файл] ${file.name}`);
+        }
+      });
     }
-
-    console.log(`Содержимое директории ${directoryPath}:`);
-
-    files.forEach((file) => {
-      const fullPath = path.join(directoryPath, file.name);
-      if (file.isDirectory()) {
-        console.log(`[Поддиректория] ${fullPath}`);
-        readDirectoryContents(fullPath);
-      } else {
-        console.log(`[Файл] ${fullPath}`);
-      }
-    });
   });
 }
 
-const directoryPath = 'file.txt';
+const directoryPath = __dirname; // Текущая директория
+readDirectory(directoryPath);
 
-readDirectoryContents(directoryPath);
+function deleteFileOrDirectory(targetPath) {
+  // Функция для удаления файла или директории
+  const deleteRecursive = (currentPath) => {
+    if (fs.existsSync(currentPath)) {
+      if (fs.statSync(currentPath).isDirectory()) {
+        fs.readdirSync(currentPath).forEach((file) => {
+          const filePath = path.join(currentPath, file);
+          deleteRecursive(filePath);
+        });
+        fs.rmdirSync(currentPath);
+      } else {
+        fs.unlinkSync(currentPath);
+      }
+    }
+  };
+
+  // Вызов функции для удаления файла или директории
+  deleteRecursive(targetPath);
+}
+
+// Пример использования функции с указанием пути к файлу или директории
+const targetPath = 'dir';
+
+deleteFileOrDirectory(targetPath);
 
 const port = 8080;
 server.listen(port, () => {
