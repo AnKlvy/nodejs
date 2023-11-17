@@ -1,0 +1,27 @@
+{
+    "name": "restapi",
+    "version": "0.0.0",
+    "scripts": {
+      "ng": "ng",
+      "start": "ng serve",
+      "build": "ng build",
+      "watch": "ng build --watch --configuration development",
+      "test": "ng test"
+    },
+    "private": true,
+    "dependencies": {
+      "cors": "^2.8.5",
+      "express": "^4.18.2",
+      "mongod": "^2.0.0",
+      "mongodb": "^6.1.0",
+      "rxjs": "~7.8.0",
+      "tslib": "^2.3.0",
+      "zone.js": "~0.13.0"
+    },
+    
+    "main": "restapi.js",
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+  }
+  
